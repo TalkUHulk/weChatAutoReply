@@ -3,12 +3,18 @@ Python+itchat+PyQt5实现的个人版微信--自动回复、防撤回、红包�
 
 一直在学习python，无意中看到了itchat这个包，感觉很有意思，简单实现了一个LowB版微信，给女朋友捉弄朋友用。其实没有什么难度，做的很简陋，这里做下记录。
 
+[博客地址](https://blog.csdn.net/hyqwmxsh/article/details/82019571)
+
 环境：
-python3.6
-PyQt5 5.11.2
-itchat 1.3.10
-wordcloud 1.5.0
-matplotlib 2.1.2
+* python3.6
+
+* PyQt5 5.11.2
+
+* itchat 1.3.10
+
+* wordcloud 1.5.0
+
+* matplotlib 2.1.2
 
 代码主要包括四个部分:
 
@@ -21,10 +27,13 @@ matplotlib 2.1.2
 * [AutoReplyWechat.py](https://github.com/Mister5ive/weChatAutoReply/blob/master/AutoReplyWechat.py)相当于一个调度中心，包括main函数
 
 
-#登录
+# 登录
+
 这部分代码功能很简单，就是获取itchat的登陆二维码
 
-##代码：
+
+## 代码：
+
 
 from PyQt5.QtWidgets import QDialog,QLabel,QPushButton,QVBoxLayout,QApplication
 from PyQt5 import QtGui
@@ -78,7 +87,8 @@ class LogWindow(QDialog):
 
 
 
-#itchat消息处理
+# itchat消息处理
+
 这部分代码主要是微信消息的获取和后续处理，全部基于itchat来实现，后面别的有趣的功能也应该在这里增加。
 
 from PyQt5.QtCore import QThread, pyqtSignal
@@ -297,7 +307,9 @@ class ItchatThread(QThread):
 
 run函数中，分别处理群和个人消息，关于itchat的api，具体可以参考官网说明。
 
-###个人消息部分：
+
+### 个人消息部分：
+
 
 调用get_head_img获取对方头像，并保存到本地。
 如果是文本信息，聊天记录保存到本地文件log，然后存进一个list--msgHistory。上述list用来保存2min以内的聊天记录（2min以上无法撤回），用来实现防撤回功能。这里保存的信息主要包括创建时间，消息人昵称、备注、ID和内容。msgHistory因为只保存了最近2min的消息，所以要一直清理，否则会堆积太多内容。msgClear函数用来清理msgHistory，原理也很简单，当前时间跟最早的时间作差，大于120s即删除。
@@ -309,10 +321,14 @@ autoReply用来开启自动回复，通过Qt界面设置。自动回复调用了
 
 最后调用auto_login，就可以获取二维码登录自己的微信了。这里注意，默认是调用电脑的看图软件打开二维码，或者可以在控制台利用字符显示。这里我想在qt界面显示，所以重写了qrCallBack，把图片数据发送给界面显示，loginCallBack负责通知界面登录状态。get_friends获取通讯录朋友信息，供界面使用。
 
-#主界面
+
+# 主界面
+
 这部分代码写的有点乱，其实没什么难度，主要是自己想实现的逻辑理清就ok了。
 
- ##代码：
+
+ ## 代码：
+ 
 
 from PyQt5.QtWidgets import QApplication ,QWidget, QTabWidget,QTextBrowser,QTextEdit,QListWidgetItem,QCheckBox,QLabel,QPushButton,QVBoxLayout,QHBoxLayout,QGridLayout,QListWidget,QMenu,QSystemTrayIcon,QAction
 from PyQt5.QtCore import pyqtSlot
@@ -822,7 +838,9 @@ QTabWidget建了三个页，基本是模仿的微信PC端。
 两个趣功能是在网上看到的，感觉很有意思，云词功能调用了wordcloud包，很好玩。我做了下简单改进在界面展示出来。
 
 
-#调度部分
+
+# 调度部分
+
 这部分代码就算是指挥中心了，继承QThread，负责其他三个累的通信，很容易理解。
 
 from PyQt5.QtWidgets import QApplication
@@ -964,7 +982,8 @@ if __name__ == '__main__':
 
  
 
-参考链接：
+
+# 参考链接：
 
 [https://www.jianshu.com/p/d042ff5f4457](https://www.jianshu.com/p/d042ff5f4457)
 
